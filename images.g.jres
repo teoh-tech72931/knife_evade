@@ -1,0 +1,17 @@
+{
+    "image1": {
+        "data": "hwQKAAoAAAAAAAAAAAAAAAAAAAAAAAAAAMDMzAAAAAAAANwMAAAAAAAA3AwAAAAAAADcDAAAAAAAAIwIAAAAAAAAiAgAAAAAAAAIAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "knife"
+    },
+    "image2": {
+        "data": "hwQKAAoAAAAAAAAAAAAAAAAAAAAAAAAAAMDMzAAAAAAAANwMAAAAAAAA3AwAAAAAAADcDAAAAAAAAIwIAAAAAAAAiAgAAAAAAAAIAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "knife2"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}

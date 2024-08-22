@@ -112,6 +112,9 @@ sprites.onOverlap(SpriteKind.bounce, SpriteKind.Player, function (sprite, otherS
 scene.onOverlapTile(SpriteKind.Enemy, assets.tile`myTile1`, function (sprite, location) {
     sprite.destroy()
 })
+scene.onOverlapTile(SpriteKind.turrent, assets.tile`myTile1`, function (sprite, location) {
+    sprite.destroy()
+})
 scene.onOverlapTile(SpriteKind.STRONG_KNIFE, assets.tile`myTile1`, function (sprite, location) {
     sprite.destroy()
 })
@@ -121,6 +124,9 @@ scene.onOverlapTile(SpriteKind.bounce, assets.tile`myTile1`, function (sprite, l
 sprites.onOverlap(SpriteKind.SUPER_HEART, SpriteKind.STRONG_KNIFE, function (sprite, otherSprite) {
     sprite.destroy()
     otherSprite.destroy()
+})
+scene.onOverlapTile(SpriteKind.Projectile, assets.tile`myTile1`, function (sprite, location) {
+    sprite.destroy()
 })
 sprites.onOverlap(SpriteKind.HEALTH, SpriteKind.STRONG_KNIFE, function (sprite, otherSprite) {
     sprite.destroy()
@@ -194,6 +200,32 @@ game.onUpdateInterval(5000, function () {
         tiles.placeOnRandomTile(_5, assets.tile`myTile0`)
         _5.setVelocity(40, 0)
     }
+})
+game.onUpdateInterval(5000, function () {
+    sprites.destroy(sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . c . . . . . . . 
+        . . c c c c c 8 8 . 
+        . . c d d d 8 8 . . 
+        . . c c c c 8 8 . . 
+        . . c . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        `, _5, 50, 50))
+    sprites.destroy(sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . c . . . . . . . 
+        . . c c c c c 8 8 . 
+        . . c d d d 8 8 . . 
+        . . c c c c 8 8 . . 
+        . . c . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        `, _5, 50, 50))
 })
 game.onUpdateInterval(2000, function () {
     if (info.score() >= 50) {
@@ -334,7 +366,8 @@ game.onUpdateInterval(1000, function () {
             . . c . . . . . . . 
             . . . . . . . . . . 
             . . . . . . . . . . 
-            `, mySprite4, 100, 0)
+            `, mySprite4, 50, 50)
+        sprites.createProjectileFromSprite(assets.image`knife`, mySprite4, 100, 0).follow(mySprite, 20)
     }
 })
 game.onUpdateInterval(1000, function () {
@@ -351,8 +384,19 @@ game.onUpdateInterval(1000, function () {
                 . . c . . . . . . . 
                 . . . . . . . . . . 
                 . . . . . . . . . . 
-                `, _5, 50, 0)
-            pause(100)
+                `, _5, 50, 50)
+            sprites.createProjectileFromSprite(img`
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                . . c . . . . . . . 
+                . . c c c c c 8 8 . 
+                . . c d d d 8 8 . . 
+                . . c c c c 8 8 . . 
+                . . c . . . . . . . 
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                `, _5, 50, 50).follow(mySprite, 50)
         }
     }
 })
