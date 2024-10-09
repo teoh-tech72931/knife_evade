@@ -42,19 +42,51 @@ sprites.onOverlap(SpriteKind.SUPER_HEART, SpriteKind.Enemy, function (sprite, ot
     sprite.destroy()
     otherSprite.destroy()
 })
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    info.setScore(200)
-})
 sprites.onOverlap(SpriteKind.FAST_BOI, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
     info.changeLifeBy(-2)
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
-    info.changeLifeBy(-1)
+    tiles.setTileAt(tiles.getTileLocation(sprite.x, sprite.y), assets.tile`myTile`)
+    pause(5000)
+    tiles.setTileAt(tiles.getTileLocation(sprite.x, sprite.y), assets.tile`myTile2`)
+    if (Math.percentChance(10)) {
+        mySprite3 = sprites.create(img`
+            . . . . . . . . . . . 
+            . . . . . . . . . . . 
+            . . 2 2 . . . 2 2 . . 
+            . 2 3 2 2 . 2 2 2 2 . 
+            . 2 3 2 2 2 2 2 2 2 . 
+            . 2 2 2 2 2 2 2 2 2 . 
+            . . 2 2 2 2 2 b 2 . . 
+            . . . 2 2 2 b 2 . . . 
+            . . . . 2 2 2 . . . . 
+            . . . . . 2 . . . . . 
+            . . . . . . . . . . . 
+            `, SpriteKind.HEALTH)
+        mySprite3.setPosition(sprite.x, sprite.y)
+    } else {
+        mySprite2 = sprites.create(img`
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . c . . . . . . . 
+            . . c c c c c 2 2 . 
+            . . c d d d 2 2 . . 
+            . . c c c c 2 2 . . 
+            . . c . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            `, SpriteKind.STRONG_KNIFE)
+        tiles.placeOnRandomTile(mySprite2, assets.tile`myTile0`)
+        mySprite2.setVelocity(100, 0)
+        mySprite2.follow(mySprite)
+        pause(2000)
+        sprites.destroy(mySprite2)
+    }
 })
 sprites.onOverlap(SpriteKind.HEALTH, SpriteKind.FAST_BOI, function (sprite, otherSprite) {
-    sprite.destroy()
     otherSprite.destroy()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile3`, function (sprite, location) {
@@ -92,6 +124,8 @@ sprites.onOverlap(SpriteKind.SUPER_HEART, SpriteKind.Player, function (sprite, o
     info.changeLifeBy(5)
 })
 info.onLifeZero(function () {
+    music.stopAllSounds()
+    music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
     if (info.score() >= 100) {
         game.splash("wow your good")
         pause(2000)
@@ -138,13 +172,21 @@ scene.onOverlapTile(SpriteKind.SUPER_HEART, assets.tile`myTile1`, function (spri
 scene.onOverlapTile(SpriteKind.FAST_BOI, assets.tile`myTile1`, function (sprite, location) {
     sprite.destroy()
 })
+controller.combos.attachCombo("A+B", function () {
+    game.splash("Hard Mode:On")
+    se = 1
+})
 let projectile: Sprite = null
-let mySprite3: Sprite = null
-let mySprite2: Sprite = null
 let mySprite4: Sprite = null
+let se = 0
+let mySprite2: Sprite = null
+let mySprite3: Sprite = null
 let mySprite: Sprite = null
 let _12 = 0
 let _5: Sprite = null
+controller.combos.setExtendedComboMode(true)
+controller.combos.setTriggerType(TriggerType.Continuous)
+controller.combos.setTimeout(0)
 tiles.setTilemap(tilemap`level1`)
 info.setLife(10)
 mySprite = sprites.create(img`
@@ -201,32 +243,6 @@ game.onUpdateInterval(5000, function () {
         _5.setVelocity(40, 0)
     }
 })
-game.onUpdateInterval(5000, function () {
-    sprites.destroy(sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        . . c . . . . . . . 
-        . . c c c c c 8 8 . 
-        . . c d d d 8 8 . . 
-        . . c c c c 8 8 . . 
-        . . c . . . . . . . 
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        `, _5, 50, 50))
-    sprites.destroy(sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        . . c . . . . . . . 
-        . . c c c c c 8 8 . 
-        . . c d d d 8 8 . . 
-        . . c c c c 8 8 . . 
-        . . c . . . . . . . 
-        . . . . . . . . . . 
-        . . . . . . . . . . 
-        `, _5, 50, 50))
-})
 game.onUpdateInterval(2000, function () {
     if (info.score() >= 50) {
         mySprite2 = sprites.create(img`
@@ -261,6 +277,32 @@ game.onUpdateInterval(2000, function () {
             mySprite3.setVelocity(60, 0)
         }
     }
+})
+game.onUpdateInterval(2000, function () {
+    sprites.destroy(sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . c . . . . . . . 
+        . . c c c c c 8 8 . 
+        . . c 7 d 7 2 8 . . 
+        . . c c c c 8 8 . . 
+        . . c . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        `, mySprite4, 50, 50))
+    sprites.destroy(sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . c . . . . . . . 
+        . . c c c c c 8 8 . 
+        . . c d d d 8 8 . . 
+        . . c c c c 8 8 . . 
+        . . c . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        `, _5, 50, 50))
 })
 game.onUpdateInterval(1000, function () {
     mySprite2 = sprites.create(img`
@@ -317,20 +359,22 @@ game.onUpdateInterval(1000, function () {
 })
 game.onUpdateInterval(1000, function () {
     if (info.score() >= 80) {
-        mySprite2 = sprites.create(img`
-            . . . . . . . . . . 
-            . . . . . . . . . . 
-            . . . . . . . . . . 
-            . . c . . . . . . . 
-            . . c c c c c 8 8 . 
-            . . c d d d 8 8 . . 
-            . . c c c c 8 8 . . 
-            . . c . . . . . . . 
-            . . . . . . . . . . 
-            . . . . . . . . . . 
-            `, SpriteKind.FAST_BOI)
-        tiles.placeOnRandomTile(mySprite2, assets.tile`myTile0`)
-        mySprite2.setVelocity(100, 0)
+        for (let index = 0; index < 4; index++) {
+            mySprite2 = sprites.create(img`
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                . . c . . . . . . . 
+                . . c c c c c 8 8 . 
+                . . c d d d 8 8 . . 
+                . . c c c c 8 8 . . 
+                . . c . . . . . . . 
+                . . . . . . . . . . 
+                . . . . . . . . . . 
+                `, SpriteKind.FAST_BOI)
+            tiles.placeOnRandomTile(mySprite2, assets.tile`myTile0`)
+            mySprite2.setVelocity(200, 0)
+        }
         if (Math.percentChance(30)) {
             mySprite3 = sprites.create(img`
                 . . . . . . . . . . . 
@@ -351,7 +395,11 @@ game.onUpdateInterval(1000, function () {
     }
 })
 game.onUpdateInterval(1000, function () {
-    info.changeScoreBy(1)
+    if (se == 0) {
+        info.changeScoreBy(1)
+    } else {
+        info.changeScoreBy(20)
+    }
 })
 game.onUpdateInterval(1000, function () {
     if (info.score() >= 200) {
@@ -361,13 +409,24 @@ game.onUpdateInterval(1000, function () {
             . . . . . . . . . . 
             . . c . . . . . . . 
             . . c c c c c 8 8 . 
-            . . c d d d 8 8 . . 
+            . . c 7 d 7 2 8 . . 
             . . c c c c 8 8 . . 
             . . c . . . . . . . 
             . . . . . . . . . . 
             . . . . . . . . . . 
             `, mySprite4, 50, 50)
-        sprites.createProjectileFromSprite(assets.image`knife`, mySprite4, 100, 0).follow(mySprite, 20)
+        sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . c . . . . . . . 
+            . . c c c c c 8 8 . 
+            . . c 7 d 7 2 8 . . 
+            . . c c c c 8 8 . . 
+            . . c . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            `, mySprite4, 100, 50).follow(mySprite, 30)
     }
 })
 game.onUpdateInterval(1000, function () {
@@ -379,7 +438,7 @@ game.onUpdateInterval(1000, function () {
                 . . . . . . . . . . 
                 . . c . . . . . . . 
                 . . c c c c c 8 8 . 
-                . . c d d d 8 8 . . 
+                . . c 7 d 7 2 8 . . 
                 . . c c c c 8 8 . . 
                 . . c . . . . . . . 
                 . . . . . . . . . . 
@@ -391,12 +450,43 @@ game.onUpdateInterval(1000, function () {
                 . . . . . . . . . . 
                 . . c . . . . . . . 
                 . . c c c c c 8 8 . 
-                . . c d d d 8 8 . . 
+                . . c 7 d 7 2 8 . . 
                 . . c c c c 8 8 . . 
                 . . c . . . . . . . 
                 . . . . . . . . . . 
                 . . . . . . . . . . 
                 `, _5, 50, 50).follow(mySprite, 50)
+        }
+    }
+})
+forever(function () {
+    if (se == 0) {
+        if (info.score() >= 300) {
+            game.over(true)
+            pause(5000)
+            game.reset()
+        }
+    } else {
+        mySprite3 = sprites.create(img`
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            . . c . . . . . . . 
+            . . c c c c c 8 8 . 
+            . . c d d d 8 8 . . 
+            . . c c c c 8 8 . . 
+            . . c . . . . . . . 
+            . . . . . . . . . . 
+            . . . . . . . . . . 
+            `, SpriteKind.bounce)
+        tiles.placeOnRandomTile(mySprite3, assets.tile`myTile0`)
+        mySprite3.setBounceOnWall(true)
+        mySprite3.setVelocity(randint(-56, 56), 100)
+        pause(2000)
+        if (info.score() >= 1000) {
+            game.over(true)
+            pause(5000)
+            game.reset()
         }
     }
 })
@@ -423,27 +513,18 @@ forever(function () {
     }
 })
 forever(function () {
-    if (info.score() >= 300) {
-        game.over(true)
-        pause(5000)
-        game.reset()
+    music.setTempo(Math.constrain(info.score(), 40, 200))
+    music.play(music.tonePlayable(262, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+    music.play(music.tonePlayable(294, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+    for (let index = 0; index < 2; index++) {
+        music.play(music.tonePlayable(311, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+        music.play(music.tonePlayable(349, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+        music.play(music.tonePlayable(311, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+        for (let index = 0; index < 2; index++) {
+            music.play(music.tonePlayable(294, music.beat(BeatFraction.Half)), music.PlaybackMode.UntilDone)
+        }
     }
 })
-game.onUpdateInterval(200, function () {
-    if (info.score() >= 120) {
-        mySprite3 = sprites.create(img`
-            . . . . . . . . . . 
-            . . . . 8 . . . . . 
-            . . . . 8 8 8 . . . 
-            . . . . c 8 8 . . . 
-            . . . . c d c . . . 
-            . . . . c d c . . . 
-            . . . . c d c . . . 
-            . . . c c c c c . . 
-            . . . . . . . . . . 
-            . . . . . . . . . . 
-            `, SpriteKind.Enemy)
-        tiles.placeOnRandomTile(mySprite3, assets.tile`myTile3`)
-        mySprite3.setVelocity(0, -100)
-    }
+game.onUpdateInterval(500, function () {
+    music.setTempo(Math.constrain(info.score(), 40, 200))
 })
