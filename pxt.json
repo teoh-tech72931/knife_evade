@@ -3,7 +3,11 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "pxt-button-combos": "github:jwunderl/pxt-button-combos#v0.0.24"
+        "pxt-button-combos": "github:jwunderl/pxt-button-combos#v0.0.24",
+        "corgio": "*",
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.2",
+        "multiplayer": "*",
+        "animation": "*"
     },
     "files": [
         "main.blocks",
@@ -22,7 +26,7 @@
         "branch": "v1.6.24",
         "tag": "v1.6.24",
         "commits": "https://github.com/microsoft/pxt-arcade/commits/5bea1575ea693e0648a647cbd86cda9776d58f48",
-        "target": "1.12.56",
+        "target": "1.12.58",
         "pxt": "7.2.25",
         "targetId": "arcade"
     },
